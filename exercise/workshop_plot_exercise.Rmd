@@ -1,7 +1,7 @@
 ---
 title: "unhcRstyle Workshop Plot Exercise"
 author: "Cedric Vidonne"
-date: "March 2021"
+date: "marzo 2021"
 output: html_document
 ---
 
@@ -16,10 +16,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Install and load required packages
+## Instalar y cargar los paquetes necesarios
 
 ```{r load-packages}
-# Uncomment the lines below if you don't have the packages installed
+# Descomente las líneas siguientes si no tiene los paquetes instalados
 # install.packages(c('tidyverse', 'readxl', 'scales'))
 # remotes::install_github('unhcr/unhcrdatapackage')
 # remotes::install_github('unhcr-web/unhcRstyle')
@@ -30,7 +30,7 @@ library(readxl)
 library(scales)
 ```
 
-## Load and clean required datasets
+## Cargar y limpiar los conjuntos de datos necesarios
 
 ```{r load-data}
 # End of year populatiuon from UNHCR Data finder
@@ -39,7 +39,7 @@ popdata <- unhcrdatapackage::end_year_population_totals
 # 4W data from Colombia
 data_4W <- read_excel("data/4W_Publico_Consolidado_septiembre.xlsx")
 
-# Manipulate to get same stage as R basic workshop
+# Manipular para conseguir el mismo escenario que el taller básico de R
 data_4W %>%
   mutate(Municipio = str_to_lower(Municipio),
          Municipio = str_replace_all(Municipio, "á", "a"),
@@ -65,23 +65,25 @@ data_4W %>%
 
 ```
 
-## Bar chart
+## Gráfico de barras
 
-**Exercise 1:** Create a bar chart of the number of activity per sector using the unhcr_theme and playing with the visual aspect.
+**Ejercicio 1:** Crear un gráfico de barras del número de actividad por sector utilizando el tema unhcr_theme y jugando con el aspecto visual.
 
-There are two ways of representing bar chart with geom_bar or geom_col. The main difference is that geom_bar comes with a stat of count as default. This can be overwrite with `stats = "identity"` (see results below for examples).
+Hay dos formas de representar el gráfico de barras con geom_bar o geom_col. La principal diferencia es que geom_bar viene con un stat de count por defecto. Esto se puede sobreescribir con `stats = "identity"` (ver los resultados más abajo para los ejemplos).
 
-**Advanced** sort it by number of activity and color it by part of the RMRP or not.
+**Avanzado** ordenarlo por número de actividad y colorearlo por parte del RMRP o no.
+
+Traducción realizada con la versión gratuita del traductor www.DeepL.com/Translator
 
 ```{r bar-ex}
 # Place your code here
 
 ```
 
-**Results:**
+**Resultados:**
 
 ```{r bar-sector}
-# Example using geom_bar and simply counting the number of row per sector.
+# Ejemplo utilizando geom_bar y contando simplemente el número de filas por sector.
 bar_sector <- ggplot(data = data_4W) +
   aes(x = Sector) +
   geom_bar(fill = unhcr_blue) +
@@ -122,7 +124,7 @@ bar_sector_sorted_fill
 
 
 ```{r col-sector}
-# Example using geom_col. Need to create the count in the data first
+# Ejemplo utilizando geom_col. Primero hay que crear el recuento en los datos
 data_4W_counted <- data_4W %>% 
   count(Sector, `Parte RMRP`, name = "count") %>% 
   group_by(Sector) %>% 
@@ -168,28 +170,28 @@ col_sector_sorted_fill
 
 ```
 
-## Line chart
+## Gráfico de líneas
 
-**Exercise 2:** Create a line chart of the number of IDPs in Colombia from 2000 to 2019 using the unhcr_theme and playing with the visual aspect.
+**Ejercicio 2:** Crear un gráfico de líneas del número de desplazados en Colombia desde el año 2000 hasta el 2019 utilizando el tema unhcr_theme y jugando con el aspecto visual.
 
-**Advanced** add more population type and label directly the lines.
+**Avanzado** añadir más tipo de población y etiquetar directamente las líneas.
 
 ```{r line-ex}
 # Place your code here
 
 ```
 
-**Results:**
+**Resultados:**
 
 ```{r line-result}
-# Work on the data
+# Trabajar en los datos
 displaced_col <- popdata %>% 
   filter(CountryAsylumCode == "COL",
          Year >= 2000) %>% 
   group_by(Year) %>% 
   summarise(IDP = sum(IDP, na.rm = TRUE))
 
-# Plot the data
+# Representar los datos
 ggplot(data = displaced_col) +
   aes(x = Year, y=IDP, group = 1) +
   geom_line(color = unhcr_green, size = 1) +
@@ -202,26 +204,26 @@ ggplot(data = displaced_col) +
   scale_x_discrete(breaks = c(2000,2005, 2010, 2015, 2019), name = "")
 ```
 
-## Pie chart
+## Gráfico torta
 
-**Exercise 3:** Create a pie chart of the proportion of Modalidad
+**Ejercicio 3:** Crear un gráfico circular de la proporción de la Modalidad
 
-**Advanced** add direct labels and improve order of slices.
+**Avanzado** añadir etiquetas directas y mejorar el orden de las rebanadas.
 
 ```{r line-ex}
-# Place your code here
+# Coloque su código aquí
 
 ```
 
-**Results:**
+**Resultados:**
 
 ```{r pie-result}
-# Work on the data
+# Trabajar en los datos
 modalidad <- data_4W %>% 
   group_by(Modalidad) %>% 
   summarise(count = n())
 
-# Plot the data
+# Representar los datos
 ggplot(data = modalidad) +
   aes(x = "", y = count, fill = Modalidad) + 
   geom_bar(stat = "identity", width = 1) +
